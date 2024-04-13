@@ -1,0 +1,24 @@
+mol load psf ../step5_assembly.xplor_ext.psf
+mol addfile step7.1_production.restart.coor
+set all [atomselect top all]
+set sel [atomselect top "segid MEMB and name P"]
+$all set beta 0
+$sel set beta 0.5
+$all writepdb restrain_P.pdb
+set allatoms [atomselect top all]
+$allatoms set beta 0
+$allatoms set occupancy 0
+set fixedatom [atomselect top "protein and resid 193 113 207 203 284 and name CA"]
+set smdatom [atomselect top "resname LIG and noh and not name LP1 LP2"]
+$fixedatom set beta 1
+$smdatom set occupancy 1
+$allatoms writepdb lig.pdb
+set smdpos [lindex [$smdatom get {x y z}] 0]
+set fixedpos [lindex [$fixedatom get {x y z}] 0]
+vecnorm [vecsub $smdpos $fixedpos]
+
+
+
+
+-4.503000259399414 6.505000114440918 -2.008000373840332
+-0.5516843313523516 0.7969811109016488 -0.2458973513608522
